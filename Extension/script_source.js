@@ -31,7 +31,7 @@ function replaceFacebook() {
   var temp = document.getElementById("pageLogo");
   var element = temp.children[0];
 
-  element.style.backgroundImage = "url(http://steppschuh.net/media/images/logos/steppschuh_logo_80.png)";
+  element.style.backgroundImage = "url(https://raw.githubusercontent.com/Steppschuh/SourceReplacerExtension/master/Extension/images/facebook_logo.png)";
   element.style.backgroundSize = "contain";
   element.style.backgroundRepeat = "no-repeat";
   element.style.backgroundPosition = "top left";
