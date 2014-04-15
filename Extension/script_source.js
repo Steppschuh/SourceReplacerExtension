@@ -44,6 +44,10 @@ function replaceFacebook() {
   element.style.backgroundRepeat = "no-repeat";
   element.style.backgroundPosition = "top left";
   
+  replaceFacebookChatImages();
+}
+
+function replaceFacebookChatImages() {
   // Get chat windows
   var nodes;
   var chats = document.getElementsByClassName("fbDockChatTabFlyout");
@@ -67,9 +71,7 @@ function replaceTagNode(node) {
     console.log("Tag value: " + tagValue);
 
     if (tagValue === "test") {
-      replaceFacebookChatImage(node, getImageUrl("stamp_optimistisch_bleiben.png"));
-    } else if (tagValue === "optimistisch") {
-      replaceFacebookChatImage(node, getImageUrl("stamp_optimistisch_bleiben.png"));
+      replaceFacebookChatImage(node, getImageUrl("optimistisch.png"));
     } else {
       replaceFacebookChatImage(node, getImageUrl(tagValue + ".png"));
     }
@@ -126,13 +128,9 @@ function findElementsContaining(node, querry) {
 }
 
 function traverseChildren(node, querry) {
-  //console.log("Traversing: ");
-  //console.log(node);
   if (node.childNodes !== undefined) {
     var childCount = node.childNodes.length;
-      //console.log(childCount + " node children");
       if (childCount < 1) {
-        //console.log("No more children in " + node);
       } else {
         for (var i = 0; i < childCount; ++i) {
             var child = node.childNodes[i];
@@ -142,15 +140,12 @@ function traverseChildren(node, querry) {
               }
             } else if (child.nodeValue != null) {
               if (child.nodeValue.indexOf(querry) != - 1) {
-                //console.log(" - Element found");
                 traverseResult.push(node);
               }
             }
         }
       }
       
-  } else {
-    //console.log("Childnodes undefined");
   }
 }
 
