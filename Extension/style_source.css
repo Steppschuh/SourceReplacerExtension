@@ -1,0 +1,12 @@
+.facebookChatImageFull {
+	margin: 10px;
+}
+
+.facebookChatImageA {
+	background-color: transparent !important;
+	border: none !important;
+}
+
+._ksh::after {
+	display: none;
+}

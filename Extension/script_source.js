@@ -66,19 +66,35 @@ function replaceTagNode(node) {
     console.log("Tag: " + tag);
     console.log("Tag value: " + tagValue);
 
+    if (tagValue === "test") {
+      replaceFacebookChatImage(node, getImageUrl("stamp_optimistisch_bleiben.png"));
+    } else if (tagValue === "optimistisch") {
+      replaceFacebookChatImage(node, getImageUrl("stamp_optimistisch_bleiben.png"));
+    } else {
+      replaceFacebookChatImage(node, getImageUrl(tagValue + ".png"));
+    }
+  } catch (ex) {
+    console.log("Can't replace tag in node:");
+    console.log(ex);
+  }
+}
+
+function replaceFacebookChatImage(node, imageUrl) {
+  try {
     var insertA = document.createElement("a");
-    insertA.className = "_ksh";
+    insertA.className = "facebookChatImageA _ksh";
     insertA.setAttribute("aria-label", "Uploaded");
-    insertA.setAttribute("href", "http://steppschuh.net");
+    insertA.setAttribute("href", "https://github.com/Steppschuh/SourceReplacerExtension");
     insertA.setAttribute("role", "img");
     insertA.setAttribute("target", "_blank");
 
     var insertImg = document.createElement("img");
-    insertImg.setAttribute("src", "https://raw.githubusercontent.com/Steppschuh/SourceReplacerExtension/master/Extension/images/facebook_logo.png");
+    insertImg.className = "facebookChatImageFull";
+    insertImg.setAttribute("src", imageUrl);
 
     insertA.appendChild(insertImg);
     node.appendChild(insertA);
-    node.innerHTML = node.innerHTML.replace(tag, "");
+    node.innerHTML = node.innerHTML.replace(getTag(node.innerHTML), "");
   } catch (ex) {
     console.log("Can't replace tag in node:");
     console.log(ex);
