@@ -2,11 +2,17 @@ var hostUrl = "https://raw.githubusercontent.com/Steppschuh/SourceReplacerExtens
 var traverseResult;
 
 function onWindowLoad() {
-  replaceElements();
+  startReplaceTimer(5000);
 }
 
 function getImageUrl(image) {
   return hostUrl + "images/" + image;
+}
+
+function startReplaceTimer(interval) {
+  setInterval(function(){
+    replaceElements();
+  }, interval);
 }
 
 function replaceElements() {
@@ -20,7 +26,6 @@ function replaceElements() {
   } else {
     
   }
-  
 }
 
 function replaceGeneral() {
@@ -40,17 +45,62 @@ function replaceFacebook() {
   element.style.backgroundPosition = "top left";
   
   // Get chat windows
+  var nodes;
   var chats = document.getElementsByClassName("fbDockChatTabFlyout");
-  for (chat in chats) {
-    console.log("Chat found");
-    var rootNode = document;
-    var nodes = findElementsContaining(rootNode, "Stephan");
-    console.log(nodes.length + " elements found");
-    //console.log(nodes);
+  for (var c = 0; c < chats.length; c++) {
+    var chat = chats[c];
+    var rootNode = chat;
+    nodes = findElementsContaining(rootNode, "[tag:");
     for (var i = 0; i < nodes.length; i++) {
-      console.log(nodes[i]);
+      var node = nodes[i];
+      replaceTagNode(node);
     }
   }
+}
+
+function replaceTagNode(node) {
+  console.log(node);
+  try {
+    var tag = getTag(node.innerHTML);
+    var tagValue = getTagValue(tag);
+    console.log("Tag: " + tag);
+    console.log("Tag value: " + tagValue);
+
+    var insertA = document.createElement("a");
+    insertA.className = "_ksh";
+    insertA.setAttribute("aria-label", "Uploaded");
+    insertA.setAttribute("href", "http://steppschuh.net");
+    insertA.setAttribute("role", "img");
+    insertA.setAttribute("target", "_blank");
+
+    var insertImg = document.createElement("img");
+    insertImg.setAttribute("src", "https://raw.githubusercontent.com/Steppschuh/SourceReplacerExtension/master/Extension/images/facebook_logo.png");
+
+    insertA.appendChild(insertImg);
+    node.appendChild(insertA);
+    node.innerHTML = node.innerHTML.replace(tag, "");
+  } catch (ex) {
+    console.log("Can't replace tag in node:");
+    console.log(ex);
+  }
+}
+
+function getTag(text) {
+  var tag = null;
+  if (text.indexOf("[tag:") != null) {
+    tag = text.substr(text.indexOf("[tag:"));
+    tag = tag.substr(0, tag.indexOf("]") + 1);
+  }
+  return tag;
+}
+
+function getTagValue(text) {
+  var tag = null;
+  if (text.indexOf("[tag:") != null) {
+    tag = text.substr(text.indexOf("[tag:") + 5);
+    tag = tag.substr(0, tag.indexOf("]"));
+  }
+  return tag;
 }
 
 function findElementsContaining(node, querry) {
