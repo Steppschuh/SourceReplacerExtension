@@ -1,21 +1,53 @@
 var hostUrl = "https://raw.githubusercontent.com/Steppschuh/SourceReplacerExtension/master/Extension/";
 var traverseResult;
 
+var activate = true;
+var replaceTimer;
+var replaceTimerInterval = 10000;
+
 function onWindowLoad() {
-  startReplaceTimer(5000);
+  getSettings();
+  startReplaceTimer();
+}
+
+function getSettings() {
+  sendRequest({action: "getSettings"}, function(response) {
+    console.log("Received settings:");
+    console.log(response);
+
+    replaceTimerInterval = response.interval;
+    activate = response.activate;
+
+    // Restart timer to apply interval settings
+    stopReplaceTimer();
+    startReplaceTimer();
+  });
+}
+
+function sendRequest(data, callback) {
+  chrome.runtime.sendMessage(data, function(response) {
+    callback(response);
+  });
 }
 
 function getImageUrl(image) {
   return hostUrl + "images/" + image;
 }
 
-function startReplaceTimer(interval) {
-  setInterval(function(){
+function startReplaceTimer() {
+  replaceTimer = setInterval(function(){
     replaceElements();
-  }, interval);
+  }, replaceTimerInterval);
+}
+
+function stopReplaceTimer() {
+  clearInterval(replaceTimer);
 }
 
 function replaceElements() {
+  if (!activate) {
+    return;
+  }
   // Replace general stuff
   replaceGeneral();
 
@@ -184,3 +216,10 @@ chrome.extension.sendMessage({
     source: DOMtoString(document)
 });
 
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    console.log("Content script received message:");
+    console.log(request);
+    if (request.greeting == "hello")
+      sendResponse({farewell: "goodbye"});
+  });
