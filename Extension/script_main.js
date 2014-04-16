@@ -5,8 +5,7 @@ function log(message) {
 }
 
 function init() {
-  var button = document.getElementById("btn_test");
-  button.addEventListener("click", function() { test();});
+
 }
 
 function sendRequest(data, callback) {
@@ -24,7 +23,18 @@ function test() {
   });
 }
 
+function applySettings() {
+  sendRequest({action: "applySettings", value: generateSettingsObject()}, function(response) {
+    console.log(response);
+  });
+}
+
 function onWindowLoad() {
+  var button = document.getElementById("btn_apply");
+  button.addEventListener("click", function() {
+    applySettings();
+  })
+
   refreshPageSource();
 }
 

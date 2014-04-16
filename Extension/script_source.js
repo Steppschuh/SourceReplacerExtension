@@ -15,13 +15,18 @@ function getSettings() {
     console.log("Received settings:");
     console.log(response);
 
-    replaceTimerInterval = response.interval;
-    activate = response.activate;
-
-    // Restart timer to apply interval settings
-    stopReplaceTimer();
-    startReplaceTimer();
+    applySettingsObject(response);
   });
+}
+
+function applySettingsObject(settings) {
+  console.log("Applying settings");
+  replaceTimerInterval = settings.interval;
+  activate = settings.activate;
+
+  // Restart timer to apply interval settings
+  stopReplaceTimer();
+  startReplaceTimer();
 }
 
 function sendRequest(data, callback) {
@@ -220,6 +225,9 @@ chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     console.log("Content script received message:");
     console.log(request);
-    if (request.greeting == "hello")
+    if (request.greeting == "hello") {
       sendResponse({farewell: "goodbye"});
+    } else if (request.action == "applySettings") {
+      applySettingsObject(request.value);
+    }
   });
