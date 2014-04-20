@@ -21,12 +21,15 @@ function getSettings() {
 
 function applySettingsObject(settings) {
   console.log("Applying settings");
-  replaceTimerInterval = settings.interval;
-  activate = settings.activate;
+  if (settings !== undefined) {
+    replaceTimerInterval = settings.interval;
+    activate = settings.activate;
 
-  // Restart timer to apply interval settings
-  stopReplaceTimer();
-  startReplaceTimer();
+    // Restart timer to apply interval settings
+    stopReplaceTimer();
+    startReplaceTimer();
+  }
+  
 }
 
 function sendRequest(data, callback) {
@@ -43,6 +46,7 @@ function startReplaceTimer() {
   replaceTimer = setInterval(function(){
     replaceElements();
   }, replaceTimerInterval);
+  replaceElements();
 }
 
 function stopReplaceTimer() {
@@ -58,8 +62,11 @@ function replaceElements() {
 
   // Detect website
   var url = document.URL;
-  if (url.indexOf("facebook.com") != null) {
+  if (url.indexOf("facebook.com") != -1) {
     replaceFacebook();
+    replaceString("Lena Fox", "Luna");
+    replaceString("Dominik Vonder Heydt", "Fischkopp");
+    replaceString("Hagen Echzell", "Suffkopp");
   } else {
     
   }
@@ -82,6 +89,16 @@ function replaceFacebook() {
   element.style.backgroundPosition = "top left";
   
   replaceFacebookChatImages();
+}
+
+function replaceString(oldValue, newValue) {
+  var nodes;
+  var rootNode = document.body;
+  nodes = findElementsContaining(rootNode, oldValue);
+  for (var i = 0; i < nodes.length; i++) {
+    var node = nodes[i];
+    node.innerHTML = node.innerHTML.replace(oldValue, newValue);
+  }
 }
 
 function replaceFacebookChatImages() {
