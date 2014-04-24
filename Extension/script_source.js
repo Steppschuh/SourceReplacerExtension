@@ -11,12 +11,37 @@ function onWindowLoad() {
 }
 
 function getSettings() {
+  //getSettingsFromPopup();
+  getSettingsFromStorage();
+}
+
+function getSettingsFromPopup() {
+  console.log("Requesting settings from extension popup");
   sendRequest({action: "getSettings"}, function(response) {
     console.log("Received settings:");
     console.log(response);
 
     applySettingsObject(response);
   });
+}
+
+function getSettingsFromStorage() {
+  console.log("Parsing settings from local storage");
+  try {
+    var settings = localStorage.getItem('settings');
+    if (settings != null) {
+      applySettingsObject(settings);
+    } else {
+      console.log("No settings available");
+      // TODO: save default settings
+    }
+  } catch (ex) {
+    console.log(ex);
+  }
+}
+
+function saveSettings(settings) {
+  localStorage.setItem('settings', JSON.stringify(settings));
 }
 
 function applySettingsObject(settings) {
@@ -67,6 +92,7 @@ function replaceElements() {
     replaceString("Lena Fox", "Luna");
     replaceString("Dominik Vonder Heydt", "Fischkopp");
     replaceString("Hagen Echzell", "Suffkopp");
+    replaceString("Annemarie Bech", "Manni");
   } else {
     
   }
@@ -77,8 +103,6 @@ function replaceGeneral() {
 }
 
 function replaceFacebook() {
-  console.log("Replacing DOM on Facebook");
-
   // Page logo
   var temp = document.getElementById("pageLogo");
   var element = temp.children[0];
@@ -99,6 +123,9 @@ function replaceString(oldValue, newValue) {
     var node = nodes[i];
     node.innerHTML = node.innerHTML.replace(oldValue, newValue);
   }
+  if (nodes.length > 0) {
+    console.log("Replaced " + oldValue + " with " + newValue + " (" + nodes.length + " matches found)");
+  }
 }
 
 function replaceFacebookChatImages() {
@@ -117,12 +144,11 @@ function replaceFacebookChatImages() {
 }
 
 function replaceTagNode(node) {
-  console.log(node);
+  //console.log(node);
   try {
     var tag = getTag(node.innerHTML);
     var tagValue = getTagValue(tag);
-    console.log("Tag: " + tag);
-    console.log("Tag value: " + tagValue);
+    console.log("Replacing tag: " + tagValue);
 
     if (tagValue === "test") {
       replaceFacebookChatImage(node, getImageUrl("optimistisch.png"));
@@ -202,6 +228,8 @@ function traverseChildren(node, querry) {
       
   }
 }
+
+
 
 function DOMtoString(document_root) {
     var html = '';

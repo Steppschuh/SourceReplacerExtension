@@ -35,7 +35,7 @@ function onWindowLoad() {
     applySettings();
   })
 
-  refreshPageSource();
+  //refreshPageSource();
 }
 
 function replacePageSource() {
